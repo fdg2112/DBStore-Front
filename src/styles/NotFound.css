@@ -1,0 +1,36 @@
+.notFound {
+  max-width: 400px;
+  margin: 120px auto;
+  padding: 0 20px;
+  text-align: center;
+}
+
+.notFound img {
+  width: 100%;
+  max-width: 200px; 
+  height: auto;
+  display: block;
+  margin: 0 auto 20px;
+}
+
+.notFound h2 {
+  font-size: 1.5em;
+  color: #333;
+  margin-bottom: 40px;
+}
+
+.notFound-link {
+  display: inline-block;
+  padding: 10px 20px;
+  background-color: #3483fa;
+  color: #fff;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.95em;
+  transition: background-color 0.2s;
+  margin-bottom: 40px;
+}
+
+.notFound-link:hover {
+  background-color: #2968c8;
+}

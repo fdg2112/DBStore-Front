@@ -3,63 +3,44 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Layout from "../components/Layout/Layout";
 import "../styles/ProductForm.css";
-import { db } from "../config/Firebase";
-import { collection, addDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import {
+  getProductById,
+  createProduct,
+  updateProduct,
+} from "../services/productService";
 
 const ProductForm = () => {
-  const { id }      = useParams();
-  const isEditing   = Boolean(id);
-  const navigate    = useNavigate();
+  const { id } = useParams();
+  const isEditing = Boolean(id);
+  const navigate = useNavigate();
 
   const [form, setForm] = useState({
-    title:       "",
-    price:       "",
+    name: "",
     description: "",
-    image:       "",
-    category:    "",
-    stock: ""
+    price: "",
+    stock: "",
+    imageUrl: "",
   });
-
-  const [error, setError]   = useState(null);
+  const [error, setError]     = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const productsRef = collection(db, "products");
-
-  const createProduct = async (productData) => {
-    try {
-      const productRef = await addDoc(productsRef, productData);
-      return productRef.id;
-    } catch (err) {
-      console.error("Error al crear el producto:", err);
-      throw new Error("Error al crear el producto");
-    }
-  };
-
-  const updateProduct = async (docId, productData) => {
-    try {
-      const docRef = doc(db, "products", docId);
-      await updateDoc(docRef, productData);
-    } catch (err) {
-      console.error("Error al actualizar el producto:", err);
-      throw new Error("Error al actualizar el producto");
-    }
-  };
-
-  // Si estamos editando, traigo del Firestore
+  // Si estamos editando, traemos el producto de la API
   useEffect(() => {
     if (!isEditing) return;
 
     const loadProduct = async () => {
       setLoading(true);
       try {
-        const docRef  = doc(db, "products", id);
-        const snap    = await getDoc(docRef);
-        if (!snap.exists()) {
-          throw new Error("Producto no encontrado");
-        }
-        setForm(snap.data());
-      } catch (err) {
-        setError(err.message);
+        const product = await getProductById(id);
+        setForm({
+          name:        product.name,
+          description: product.description,
+          price:       product.price.toString(),
+          stock:       product.stock.toString(),
+          imageUrl:    product.imageUrl,
+        });
+      } catch (e) {
+        setError("Producto no encontrado: " + e.message);
       } finally {
         setLoading(false);
       }
@@ -67,7 +48,6 @@ const ProductForm = () => {
 
     loadProduct();
   }, [id, isEditing]);
-
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -78,35 +58,32 @@ const ProductForm = () => {
     e.preventDefault();
     setError(null);
 
-    // validaciones
-    if (!form.sku || !form.title || !form.price || !form.category) {
-      setError("Por favor completa todos los campos obligatorios");
+    // Validaciones
+    if (form.name.trim().length < 3) {
+      setError("El nombre debe tener al menos 3 caracteres");
       return;
     }
-    if (isNaN(form.price) || parseFloat(form.price) <= 0) {
+    const price = parseFloat(form.price);
+    if (isNaN(price) || price <= 0) {
       setError("El precio debe ser un número positivo");
       return;
     }
-    if (form.sku.length < 3) {
-      setError("El sku del producto debe tener al menos 3 caracteres");
+    const stock = parseInt(form.stock, 10);
+    if (isNaN(stock) || stock < 0) {
+      setError("El stock debe ser un entero mayor o igual a 0");
       return;
     }
-    if (form.title.length < 3) {
-      setError("El nombre del producto debe tener al menos 3 caracteres");
-      return;
-    }
-    if (isNaN(form.stock) || parseInt(form.stock) < 0) {
-      setError("El stock debe ser un número entero ≥ 0");
+    if (!form.imageUrl.trim()) {
+      setError("La URL de la imagen es obligatoria");
       return;
     }
 
-    // Preparo el objeto que voy a mandar a Firestore
     const payload = {
-      ...form,
-      price: parseFloat(form.price),
-      stock: parseInt(form.stock),
-      updatedAt: new Date().toISOString(),
-      ...( !isEditing && { createdAt: new Date().toISOString() })
+      name:        form.name,
+      description: form.description,
+      price,
+      stock,
+      imageUrl:    form.imageUrl,
     };
 
     setLoading(true);
@@ -117,8 +94,8 @@ const ProductForm = () => {
         await createProduct(payload);
       }
       navigate("/dashboard");
-    } catch (err) {
-      setError(err.message);
+    } catch (e) {
+      setError("Error al guardar el producto: " + e.message);
     } finally {
       setLoading(false);
     }
@@ -127,41 +104,72 @@ const ProductForm = () => {
   return (
     <Layout>
       <div className="form-container">
-        <h2>{ isEditing ? "Editar producto" : "Agregar producto" }</h2>
-        { loading && <p>Cargando...</p> }
-        { error   && <p className="error-msg">{error}</p> }
+        <h2>{isEditing ? "Editar producto" : "Agregar producto"}</h2>
+        {loading && <p>Cargando...</p>}
+        {error   && <p className="error-msg">{error}</p>}
 
         <form onSubmit={handleSubmit} className="product-form">
           <label>
-            SKU
-          <input name="sku" value={form.sku} onChange={handleChange} required />
-          </label>
-          <label>
             Nombre
-            <input name="title" value={form.title} onChange={handleChange} required />
-          </label>
-          <label>
-            Categoría
-            <input name="category" value={form.category} onChange={handleChange} required />
-          </label>
-          <label>
-            Precio
-            <input name="price" type="number" step="0.01" value={form.price} onChange={handleChange} required/>
-          </label>
-          <label>
-            Stock
-            <input name="stock" type="number" value={form.stock} onChange={handleChange} min="0" required />
+            <input
+              name="name"
+              value={form.name}
+              onChange={handleChange}
+              required
+            />
           </label>
           <label>
             Descripción
-            <textarea name="description" value={form.description} onChange={handleChange} rows={4} />
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={handleChange}
+              rows={4}
+            />
+          </label>
+          <label>
+            Precio
+            <input
+              name="price"
+              type="number"
+              step="0.01"
+              value={form.price}
+              onChange={handleChange}
+              required
+            />
+          </label>
+          <label>
+            Stock
+            <input
+              name="stock"
+              type="number"
+              value={form.stock}
+              min="0"
+              onChange={handleChange}
+              required
+            />
           </label>
           <label>
             Imagen (URL)
-            <input name="image" value={form.image} onChange={handleChange} />
+            <input
+              name="imageUrl"
+              value={form.imageUrl}
+              onChange={handleChange}
+              required
+            />
           </label>
-          <button type="submit" disabled={loading}>{ isEditing ? "Guardar cambios" : "Crear producto" }</button>
-          <button type="button" className="cancel-btn" onClick={() => navigate("/dashboard")}>Cancelar</button>
+
+          <button type="submit" disabled={loading}>
+            {isEditing ? "Guardar cambios" : "Crear producto"}
+          </button>
+          <button
+            type="button"
+            className="cancel-btn"
+            onClick={() => navigate("/dashboard")}
+            disabled={loading}
+          >
+            Cancelar
+          </button>
         </form>
       </div>
     </Layout>

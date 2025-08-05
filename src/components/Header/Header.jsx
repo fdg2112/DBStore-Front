@@ -1,56 +1,86 @@
-import { Link } from "react-router-dom";
+// src/components/Header.jsx
+import { Link, useNavigate } from "react-router-dom";
 import "./Header.css";
 import logoDB from "../../assets/logo.png";
 import { useContext } from "react";
 import { UserContext } from "../../context/UserContext";
-import { signOut } from "firebase/auth";
-import { auth } from "../../config/Firebase";
-import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const navigate = useNavigate();
   const { userData, setUserData } = useContext(UserContext);
 
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      setUserData(null);
-      navigate("/");
-    } catch (err) {
-      console.error("Error al cerrar sesión:", err);
-    }
+  const handleLogout = () => {
+    // 1) Borra el token
+    localStorage.removeItem("token");
+    // 2) Limpia el contexto de usuario
+    setUserData(null);
+    // 3) Redirige al home
+    navigate("/");
   };
+
+  // Detecta si es admin
+  const isAdmin = userData?.roles?.includes("admin");
 
   return (
     <header className="header">
       <nav className="header-nav">
         <Link to="/" className="header-logo">
-          <img src={logoDB} alt="Logo Esfera" className="header-logo-image" />
+          <img
+            src={logoDB}
+            alt="Logo Dragon Ball Store"
+            className="header-logo-image"
+          />
         </Link>
 
         <div className="header-search">
-          <input type="text" placeholder="Buscar productos..." className="header-search-input" />
+          <input
+            type="text"
+            placeholder="Buscar productos..."
+            className="header-search-input"
+          />
           <button className="header-search-button">🔍</button>
         </div>
 
         <ul className="header-menu">
           {userData ? (
-            userData.role === "cliente" ? (
+            isAdmin ? (
               <>
-                <li className="header-menu-item"><Link to="/perfil">🚹 Perfil</Link></li>
-                <li className="header-menu-item"><Link to="/carrito">🛒 Carrito</Link></li>
-                <li onClick={handleLogout}>Cerrar Sesión</li>
+                <li className="header-menu-item">
+                  <Link to="/dashboard">📊 Dashboard</Link>
+                </li>
+                <li
+                  className="header-menu-item"
+                  onClick={handleLogout}
+                  style={{ cursor: "pointer" }}
+                >
+                  Cerrar Sesión
+                </li>
               </>
             ) : (
               <>
-                <li className="header-menu-item"><Link to="/dashboard">📊 Dashboard</Link></li>
-                <li onClick={handleLogout}>Cerrar Sesión</li>
+                <li className="header-menu-item">
+                  <Link to="/perfil">🚹 Perfil</Link>
+                </li>
+                <li className="header-menu-item">
+                  <Link to="/carrito">🛒 Carrito</Link>
+                </li>
+                <li
+                  className="header-menu-item"
+                  onClick={handleLogout}
+                  style={{ cursor: "pointer" }}
+                >
+                  Cerrar Sesión
+                </li>
               </>
             )
           ) : (
             <>
-              <li className="header-menu-item"><Link to="/login">Iniciar Sesión</Link></li>
-              <li className="header-menu-item"><Link to="/register">Registrarse</Link></li>
+              <li className="header-menu-item">
+                <Link to="/login">Iniciar Sesión</Link>
+              </li>
+              <li className="header-menu-item">
+                <Link to="/register">Registrarse</Link>
+              </li>
             </>
           )}
         </ul>

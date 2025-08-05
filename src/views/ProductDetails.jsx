@@ -3,29 +3,27 @@ import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout/Layout";
 import "../styles/ProductDetails.css";
-import { db } from "../config/Firebase";
-import { doc, getDoc } from "firebase/firestore";
+import { getProductById } from "../services/productService";
 
 const ProductDetails = () => {
   const { id } = useParams();
   const [product, setProduct] = useState(null);
   const [error, setError]     = useState(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchProduct = async () => {
+      setLoading(true);
       try {
-        // → Traer el documento desde Firestore
-        const docRef = doc(db, "products", id);
-        const snap   = await getDoc(docRef);
-        if (!snap.exists()) {
-          throw new Error("Producto no encontrado");
-        }
-        setProduct({ id: snap.id, ...snap.data() });
+        const p = await getProductById(id);
+        setProduct(p);
       } catch (err) {
+        console.error(err);
         setError(
-          "Ups! No se pudo cargar el producto. Algo falló, aquí el detalle: " +
-            err.message
+          "Ups! No se pudo cargar el producto. Detalle: " + err.message
         );
+      } finally {
+        setLoading(false);
       }
     };
     fetchProduct();
@@ -34,21 +32,21 @@ const ProductDetails = () => {
   return (
     <section className="productDetails">
       <Layout>
-        {error && <p className="pd-error">{error}</p>}
-        {!product && !error && <p>Cargando producto...</p>}
+        {error   && <p className="pd-error">{error}</p>}
+        {loading && <p>Cargando producto...</p>}
         {product && (
           <div className="product-card">
             <div className="pd-col pd-image-col">
-              <img src={product.image} alt={product.title} />
+              <img src={product.imageUrl} alt={product.name} />
             </div>
             <div className="pd-col pd-info-col">
-              <h2>{product.title}</h2>
+              <h2>{product.name}</h2>
               <h3>${product.price}</h3>
               <p>{product.description}</p>
-              <p>SKU {product.sku}</p>
+              <p>Stock: {product.stock}</p>
               <div className="pd-extra">
                 <p className="pd-installments">
-                  Mismo precio en 3 cuotas de ${(product.price / 3).toFixed(2)}
+                  Mismo precio en 3 cuotas de ${ (product.price / 3).toFixed(2) }
                 </p>
                 <p className="pd-subtext">o en cuotas sin tarjeta</p>
                 <p className="pd-link">

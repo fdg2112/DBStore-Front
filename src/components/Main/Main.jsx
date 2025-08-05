@@ -46,7 +46,6 @@ const Main = () => {
                 </div>
                 <h2>{product.name}</h2>
                 <p className="product-price">Precio: ${product.price}</p>
-                <p className="product-stock">Stock: {product.stock}</p>
                 <div className="card-buttons">
                   <button className="add-to-cart">Añadir al carrito</button>
                   <Link

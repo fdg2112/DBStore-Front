@@ -3,7 +3,7 @@ import "./Footer.css";
 const Footer = () => {
   return (
     <footer className="footer">
-        <p>© 2025 Mercado Liebre. Desarrollado por Franco</p>
+        <p>© 2025 DB Store. Desarrollado por Franco Gonzalez</p>
     </footer>
   );
 }

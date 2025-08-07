@@ -1,4 +1,4 @@
-html, body {
+html, body, #root {
   height: 100%;
   margin: 0;
 }
@@ -10,6 +10,12 @@ html, body {
 }
 
 .layout-content {
-  flex: 1;
-  padding: 40px 0;
+  flex: 1;                    /* ocupa todo el espacio central */
+  display: flex;              /* habilita centrar hijos si lo necesitan */
+  flex-direction: column;
+  padding: 0;                 /* deja que cada vista maneje su propio padding */
+}
+
+.footer {
+  flex: 0 0 auto;             /* no se estira, conserva su alto natural */
 }

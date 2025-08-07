@@ -37,10 +37,28 @@
 .header-title {
   margin: 0;
   font-family: 'Bangers', cursive;
-  font-size: 1.75rem;
+  font-size: 2.25rem;
   color: #ffe23c;
   text-shadow: 0 0 4px #000;
+  cursor: pointer;
+  transition: text-shadow 0.3s ease;
+  text-decoration: none;
+  animation: popTitle 0.8s ease-out;
 }
+@keyframes popTitle {
+  0%   { transform: scale(0); }
+  80%  { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.header-title:hover {
+  /* podés jugar con estos valores para ajustar el “brillo” */
+  text-shadow:
+    0 0 8px #ffe23c,
+    0 0 12px #ffd600,
+    0 0 16px #ffd600;
+}
+
 
 /* ——————————————————————————————————————
    Ajuste buscador: fondo blanco, radio, fuente normal
@@ -48,7 +66,8 @@
 .header-search {
   display: flex;
   align-items: center;
-  width: 300px;                  /* fijo para que no se achique */
+  width: 400px;                  /* fijo para que no se achique */
+  min-height: 2.5rem;          /* altura mínima */
   background: #fff;              /* cajita blanca */
   border-radius: 6px;            /* bordes redondeados */
   padding: 0.2rem 0.5rem;        /* pequeño padding interno */
@@ -103,7 +122,8 @@
 
 .header-menu-item {
   font-family: 'Bangers', cursive;
-  font-size: 1rem;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .header-menu-item a,

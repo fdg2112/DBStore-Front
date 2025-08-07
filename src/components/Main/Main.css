@@ -1,12 +1,20 @@
+/* Main.css */
 .main {
+  flex: 1;
+  background-image: url('../../assets/shenglong.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
   background-color: #f8f9fa;
+  /* elimina cualquier min-height o height fijo */
 }
+
 
 .main-header {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 0px;
+  padding: 0;
 }
 
 .banner {
@@ -26,146 +34,11 @@
   bottom: 0;
   width: 100%;
   height: 30px;
-  background: linear-gradient(to bottom, rgba(248, 249, 250, 0) 0%, rgba(248, 249, 250, 1) 100%);
-}
-
-.main-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 20px;
-}
-
-.product-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 20px;
-  width: 100%;
-  padding: 0 20px;
-  margin-top: -40px;
-  position: relative;
-  z-index: 10;
-}
-
-.product-item {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  height: 100%;
-  background-color: #ffffff;
-  border: 1px solid #dee2e6;
-  border-radius: 5px;
-  padding: 15px;
-  text-align: center;
-}
-
-.product-item:hover {
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
-}
-
-.product-item h2 {
-  transition: color 0.2s ease;
-}
-
-.product-item:hover h2 {
-  color: #3483fa;
-}
-
-
-.product-img-container {
-  height: 150px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 10px;
-}
-
-.product-img-container img {
-  max-height: 100%;
-  max-width: 100%;
-  object-fit: contain;
-}
-
-.product-item h2 {
-  font-size: 1em;
-  margin: 10px 0;
-  flex-grow: 0;
-  font-family: Roboto;
-  font-weight: normal;
-}
-
-
-.product-price {
-  font-size: 1em;
-  color: #495057;
-  font-family: Roboto;
-  font-weight: bold;
-}
-
-.product-sku {
-  font-size: 0.8em;
-  color: #6c757d;
-  font-family: Roboto;
-  font-weight: normal;
-  margin-top: 4px;
-}
-
-
-.card-buttons {
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  gap: 5px;
-  margin-top: auto;
-}
-
-.add-to-cart {
-  background-color: #e3f0ff;
-  color: #3483fa;
-  border: none;
-  padding: 10px 16px;
-  font-size: 0.9em;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.add-to-cart:hover {
-  background-color: #cde0f9;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-}
-
-.view-details {
-  background-color: #3483fa;
-  color: white;
-  border: none;
-  padding: 10px 16px;
-  font-size: 0.9em;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.2s ease, box-shadow 0.2s ease;
-}
-
-.view-details:hover {
-  background-color: #2968c8;
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
-}
-
-@media (min-width: 1600px) {
-  .product-list {
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  }
-}
-
-.product-link,
-.product-link:visited,
-.product-link:link,
-.view-details,
-.view-details:link,
-.view-details:visited {
-  text-decoration: none;
-  font-family: inherit;
+  background: linear-gradient(
+    to bottom,
+    rgba(248, 249, 250, 0) 0%,
+    rgba(248, 249, 250, 1) 100%
+  );
 }
 
 .main-content {
@@ -185,5 +58,187 @@
   border-radius: 4px;
   font-size: 1em;
   text-align: center;
+}
+
+.loading {
+  margin: 200px auto;
+  padding: 12px 16px;
+  max-width: 600px;
+  color: #155b15;
+  font-size: 2em;
+  text-align: center;
+  font-family: 'Bangers', cursive, sans-serif;
+}
+
+.product-list {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(200px, 1fr));
+  gap: 24px;
+  width: 100%;
+  padding: 0 20px;
+  margin-top: 5px;
+  position: relative;
+  z-index: 10;
+}
+
+.product-item {
+  background: #fff;
+  border: 2px solid #f28c28;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(242, 140, 40, 0.5);
+  transition: transform 0.2s, box-shadow 0.2s;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.product-item:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 0 12px rgba(242, 140, 40, 0.8),
+    0 8px 16px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+.product-item.placeholder {
+  visibility: hidden;
+  pointer-events: none;
+  background: transparent;
+  box-shadow: none;
+  border: none;
+}
+
+.product-link-wrapper {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  padding: 12px;
+  flex-grow: 1;
+}
+
+.product-img-container {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: #fff;
+  margin: 0 auto 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.product-img-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  object-position: center;
+}
+
+.product-name {
+  font-family: 'Bangers', cursive;
+  font-size: 1.2rem;
+  color: #3c78d8;
+  margin: 0 0 8px;
+  text-shadow: 0 0 2px #fff;
+}
+
+.product-price {
+  font-size: 1rem;
+  color: #f28c28;
+  font-weight: bold;
+  margin: 0;
+}
+
+.add-to-cart {
+  background: linear-gradient(45deg, #f28c28, #f97316);
+  color: white;
+  font-family: 'Bangers', cursive;
+  border: none;
+  border-top: 1px solid #e66f00;
+  padding: 12px 0;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+  border-radius: 0 0 12px 12px;
+}
+
+.add-to-cart:hover {
+  background: linear-gradient(45deg, #ff9800, #f28c28);
+  transform: scale(1.05);
+}
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 20px 0 40px;
+  font-family: 'Bangers', cursive;
+}
+
+.pagination-button {
+  background: transparent;
+  border: 2px solid #ffe23c;
+  padding: 6px 12px;
+  border-radius: 6px;
+  color: #000;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.pagination-button:hover {
+  background: #ffe23c;
+  color: #000;
+}
+
+.pagination-button.active {
+  background: #ffe23c;
+  color: #000;
+}
+
+@media (max-width: 1200px) {
+  .product-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .product-list {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .product-list {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
+.product-item {
+  position: relative;
+  overflow: hidden;
+}
+
+/* pseudo-elemento para el reflejo */
+.product-item::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.3);
+  transform: skewX(-25deg);
+}
+
+/* al hover se anima el reflejo */
+.product-item:hover::before {
+  animation: shine 0.8s forwards;
+}
+
+@keyframes shine {
+  0%   { left: -75%; }
+  100% { left: 125%; }
 }
 

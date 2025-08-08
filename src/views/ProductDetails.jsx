@@ -6,17 +6,20 @@ import { getProductById } from "../services/productService";
 
 const ProductDetails = () => {
   const { id } = useParams();
-  const [product, setProduct]     = useState(null);
-  const [error, setError]         = useState(null);
-  const [loading, setLoading]     = useState(false);
-  const [quantity, setQuantity]   = useState(1);
+  const [product, setProduct]   = useState(null);
+  const [error, setError]       = useState(null);
+  const [loading, setLoading]   = useState(false);
+  const [animateIn, setAnimateIn] = useState(false);
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     const fetchProduct = async () => {
       setLoading(true);
+      setAnimateIn(false);
       try {
         const p = await getProductById(id);
         setProduct(p);
+        setTimeout(() => setAnimateIn(true), 0);
       } catch (err) {
         setError("Ups! No se pudo cargar el producto. Detalle: " + err.message);
       } finally {
@@ -32,7 +35,7 @@ const ProductDetails = () => {
         {error   && <p className="pd-error">{error}</p>}
         {loading && <p className="pd-loading">Cargando producto…</p>}
         {product && (
-          <div className="product-card">
+          <div className={`product-card ${animateIn ? "is-entering" : ""}`}>
             <div className="pd-image-col">
               <img src={product.imageUrl} alt={product.name} />
             </div>
@@ -41,29 +44,21 @@ const ProductDetails = () => {
               <h3 className="pd-price">${product.price}</h3>
               <p className="pd-description">{product.description}</p>
               <p className="pd-stock">Stock: {product.stock}</p>
+
               <div className="pd-extra">
                 <p className="pd-installments">
-                  Mismo precio en 3 cuotas de ${(product.price/3).toFixed(2)}
+                  Mismo precio en 3 cuotas de ${(product.price / 3).toFixed(2)}
                 </p>
                 <p className="pd-subtext">o en cuotas sin tarjeta</p>
-                <p className="pd-link">
-                  <a href="#">Ver los medios de pago</a>
-                </p>
+                <p className="pd-link"><a href="#">Ver los medios de pago</a></p>
                 <p className="pd-installments">Llega gratis mañana</p>
-                <p className="pd-subtext">
-                  Comprando dentro de las próximas 12 h 36 min
-                </p>
-                <p className="pd-link">
-                  <a href="#">Más formas de entrega</a>
-                </p>
+                <p className="pd-subtext">Comprando dentro de las próximas 12 h 36 min</p>
+                <p className="pd-link"><a href="#">Más formas de entrega</a></p>
                 <p className="pd-installments">Devolución gratis</p>
-                <p className="pd-subtext">
-                  Tenés 30 días desde que lo recibís.
-                </p>
-                <p className="pd-link">
-                  <a href="#">Conocer más</a>
-                </p>
+                <p className="pd-subtext">Tenés 30 días desde que lo recibís.</p>
+                <p className="pd-link"><a href="#">Conocer más</a></p>
               </div>
+
               <div className="pd-quantity">
                 <label htmlFor="quantityInput">Cantidad:</label>
                 <input
@@ -72,13 +67,14 @@ const ProductDetails = () => {
                   min={1}
                   max={product.stock}
                   value={quantity}
-                  onChange={e => {
+                  onChange={(e) => {
                     const v = Number(e.target.value);
                     if (v >= 1 && v <= product.stock) setQuantity(v);
                   }}
                   className="pd-quantity-input"
                 />
               </div>
+
               <div className="pd-actions">
                 <button className="btn-buy">Comprar ahora</button>
                 <button className="btn-add">Añadir al carrito</button>
@@ -88,8 +84,7 @@ const ProductDetails = () => {
         )}
       </Layout>
     </section>
-);
-
+  );
 };
 
 export default ProductDetails;

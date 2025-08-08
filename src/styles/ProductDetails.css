@@ -1,15 +1,14 @@
-/* ProductDetails.css */
 .productDetails {
   flex: 1;
   background-image: url('../assets/shenglong.png');
   background-position: center;
   background-size: cover;
   background-repeat: no-repeat;
-  /* elimina background-color fijo o min-height */
 }
 
-
+/* Card base + animaciones de entrada */
 .product-card {
+  position: relative;
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 30px;
@@ -20,186 +19,83 @@
   border-radius: 12px;
   box-shadow: 0 0 8px rgba(242, 140, 40, 0.5);
   overflow: hidden;
+
+  /* estado inicial para el pop-in */
+  transform: scale(0.96);
+  opacity: 0;
+  will-change: transform, opacity;
 }
 
-@media (max-width: 768px) {
-  .product-card {
-    grid-template-columns: 1fr;
+.product-card.is-entering {
+  animation: pd-pop-in 260ms ease-out forwards;
+}
+
+/* “brillo” que barre la card, disparado tras el pop-in */
+.product-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255,255,255,0.30);
+  transform: skewX(-25deg);
+  pointer-events: none;
+}
+
+.product-card.is-entering::before {
+  animation: pd-shine 900ms ease-out 240ms forwards;
+}
+
+/* keyframes */
+@keyframes pd-pop-in {
+  to {
+    transform: scale(1);
+    opacity: 1;
   }
 }
 
-.pd-image-col {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+@keyframes pd-shine {
+  0%   { left: -75%; }
+  100% { left: 125%; }
 }
 
-.pd-image-col img {
-  width: 100%;
-  object-fit: contain;
+/* Resto de tus estilos existentes… */
+@media (max-width: 768px) {
+  .product-card { grid-template-columns: 1fr; }
 }
 
-.pd-info-col {
-  display: flex;
-  flex-direction: column;
-  padding: 20px;
-  gap: 10px;
-}
+.pd-image-col { display:flex; align-items:center; justify-content:center; padding:20px; }
+.pd-image-col img { width:100%; object-fit:contain; }
 
-.pd-title {
-  margin: 0;
-  font-size: 2em;
-  font-family: 'Bangers', cursive;
-  color: #3c78d8;
-}
+.pd-info-col { display:flex; flex-direction:column; padding:20px; gap:10px; }
 
-.pd-price {
-  margin: 0;
-  font-size: 3em;
-  font-family: 'Bangers', cursive;
-  color: #f28c28;
-}
+.pd-title { margin:0; font-size:2em; font-family:'Bangers', cursive; color:#3c78d8; }
+.pd-price { margin:0; font-size:3em; font-family:'Bangers', cursive; color:#f28c28; }
+.pd-description { margin:0; font-size:1em; line-height:1.5; font-family:'Bangers', cursive; color:#333; }
 
-.pd-description {
-  margin: 0;
-  font-size: 1em;
-  line-height: 1.5;
-  font-family: 'Bangers', cursive;
-  color: #333;
-}
+.pd-stock { margin:0; font-size:1em; font-family:'Comic Sans MS', cursive, sans-serif; color:#555; }
+.pd-extra { display:flex; flex-direction:column; gap:6px; }
+.pd-extra p { margin:0; font-size:0.9em; line-height:1.4; font-family:'Comic Sans MS', cursive, sans-serif; color:#555; }
+.pd-installments { color:#00a650; font-weight:bold; }
+.pd-link a { color:#3483fa; text-decoration:none; }
+.pd-link a:hover { text-decoration:underline; }
 
-.pd-stock {
-  margin: 0;
-  font-size: 1em;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  color: #555;
-}
-
-.pd-extra {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.pd-extra p {
-  margin: 0;
-  font-size: 0.9em;
-  line-height: 1.4;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  color: #555;
-}
-
-.pd-installments {
-  color: #00a650;
-  font-weight: bold;
-}
-
-.pd-link a {
-  color: #3483fa;
-  text-decoration: none;
-}
-
-.pd-link a:hover {
-  text-decoration: underline;
-}
-
-.pd-quantity {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 10px 0;
-}
-
-.pd-quantity label {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  font-size: 1em;
-  color: #333;
-}
-
-.pd-quantity select {
-  padding: 6px 8px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  font-size: 1em;
-}
-
-.pd-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-buy,
-.btn-add {
-  padding: 10px 16px;
-  font-size: 0.9em;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-  font-family: 'Bangers', cursive;
-}
-
-.btn-buy {
-  background: linear-gradient(45deg, #3c78d8, #2968c8);
-  color: #fff;
-  border: none;
-}
-
-.btn-buy:hover {
-  transform: scale(1.05);
-}
-
-.btn-add {
-  background: linear-gradient(45deg, #f28c28, #f97316);
-  color: #fff;
-  border: none;
-}
-
-.btn-add:hover {
-  transform: scale(1.05);
-}
-
-.pd-error,
-.pd-loading {
-  max-width: 600px;
-  margin: 40vh auto;
-  padding: 12px 16px;
-  color: #155b15;
-  border-radius: 4px;
-  text-align: center;
-  font-size: 2em;
-  font-family: 'Bangers', cursive, sans-serif;
-}
-
-.pd-quantity {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 10px 0;
-}
-
-.pd-quantity label {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  font-size: 1em;
-  color: #333;
-}
-
-.pd-quantity-input {
-  width: 4rem;
-  padding: 6px 8px;
-  font-family: 'Comic Sans MS', cursive, sans-serif;
-  font-size: 1em;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  appearance: textfield;
-}
-
+.pd-quantity { display:flex; align-items:center; gap:8px; margin:10px 0; }
+.pd-quantity label { font-family:'Comic Sans MS', cursive, sans-serif; font-size:1em; color:#333; }
+.pd-quantity-input { width:4rem; padding:6px 8px; font-family:'Comic Sans MS', cursive, sans-serif; font-size:1em; border:1px solid #ccc; border-radius:6px; appearance:textfield; }
 .pd-quantity-input::-webkit-outer-spin-button,
-.pd-quantity-input::-webkit-inner-spin-button {
-  margin: 0;
-}
+.pd-quantity-input::-webkit-inner-spin-button { margin:0; }
+.pd-quantity-input:invalid { border-color:#e66f00; }
 
-.pd-quantity-input:invalid {
-  border-color: #e66f00;
+.pd-actions { display:flex; gap:10px; }
+.btn-buy, .btn-add { padding:10px 16px; font-size:0.9em; border-radius:6px; cursor:pointer; transition:background 0.2s, transform 0.15s; font-family:'Bangers', cursive; border:none; }
+.btn-buy { background:linear-gradient(45deg,#3c78d8,#2968c8); color:#fff; }
+.btn-add { background:linear-gradient(45deg,#f28c28,#f97316); color:#fff; }
+.btn-buy:hover, .btn-add:hover { transform:scale(1.05); }
+
+.pd-error, .pd-loading {
+  max-width:600px; margin:40vh auto; padding:12px 16px;
+  color:#155b15; border-radius:4px; text-align:center; font-size:2em;
+  font-family:'Bangers', cursive, sans-serif;
 }

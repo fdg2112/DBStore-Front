@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "../views/Home.jsx";
 import Register from "../views/Register.jsx";
 import Login from "../views/Login.jsx";
+import Profile from "../views/Profile.jsx";
 import NotFound from "../views/NotFound.jsx";
 import ProductDetails from "../views/ProductDetails.jsx";
 import Dashboard from "../views/Dashboard.jsx";
@@ -14,6 +15,7 @@ const Router = () => {
         <Route path="/" element={<Home />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/profile" element={<Profile />} />
         <Route path="/products/:id" element={<ProductDetails />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/dashboard/add" element={<ProductForm />} />

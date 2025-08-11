@@ -79,14 +79,14 @@
 }
 
 .product-item {
+  position: relative;
+  overflow: hidden;
   background: #fff;
-  border: 2px solid #f28c28;
   border-radius: 12px;
   box-shadow: 0 0 8px rgba(242, 140, 40, 0.5);
   transition: transform 0.2s, box-shadow 0.2s;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 }
 
 .product-item:hover {
@@ -111,6 +111,8 @@
   color: inherit;
   padding: 12px;
   flex-grow: 1;
+  position: relative;
+  z-index: 1;
 }
 
 .product-img-container {
@@ -146,23 +148,6 @@
   color: #f28c28;
   font-weight: bold;
   margin: 0;
-}
-
-.add-to-cart {
-  background: linear-gradient(45deg, #f28c28, #f97316);
-  color: white;
-  font-family: 'Bangers', cursive;
-  border: none;
-  border-top: 1px solid #e66f00;
-  padding: 12px 0;
-  cursor: pointer;
-  transition: background 0.2s, transform 0.15s;
-  border-radius: 0 0 12px 12px;
-}
-
-.add-to-cart:hover {
-  background: linear-gradient(45deg, #ff9800, #f28c28);
-  transform: scale(1.05);
 }
 
 .pagination {
@@ -212,11 +197,6 @@
   }
 }
 
-.product-item {
-  position: relative;
-  overflow: hidden;
-}
-
 .product-item::before {
   content: "";
   position: absolute;
@@ -226,6 +206,7 @@
   height: 100%;
   background: rgba(255, 255, 255, 0.3);
   transform: skewX(-25deg);
+  pointer-events: none;
 }
 
 .product-item:hover::before {
@@ -237,3 +218,71 @@
   100% { left: 125%; }
 }
 
+.fav-toggle {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 38px;
+  height: 38px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 3;
+  transition: transform .15s ease, filter .2s ease;
+}
+
+.fav-toggle img {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  display: block;
+}
+
+.fav-toggle:hover {
+  transform: scale(1.07);
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.25));
+}
+
+.fav-toggle.active img {
+  filter: none;
+}
+
+.card-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  margin-top: auto;
+}
+
+.btn-buy-now,
+.btn-add-cart {
+  border: none;
+  padding: 12px 0;
+  font-family: 'Bangers', cursive;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.15s, filter 0.2s;
+  color: #fff;
+}
+
+.btn-buy-now {
+  background: linear-gradient(45deg, #3c78d8, #2968c8);
+  border-bottom-left-radius: 12px;
+}
+
+.btn-add-cart {
+  background: linear-gradient(45deg, #f28c28, #f97316);
+  border-bottom-right-radius: 12px;
+}
+
+.btn-buy-now:hover,
+.btn-add-cart:hover {
+  transform: scale(1.03);
+}
+
+.product-item.placeholder .card-actions {
+  display: none;
+}

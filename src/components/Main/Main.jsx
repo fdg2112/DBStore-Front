@@ -2,6 +2,10 @@ import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import "./Main.css";
 import { getProducts } from "../../services/productService";
+import esferaOn from "../../assets/esfera_favorito_activado.png";
+import esferaOff from "../../assets/esfera_favorito_desactivado.png";
+
+const FAVORITES_KEY = "favoriteIds";
 
 const Main = () => {
   const location = useLocation();
@@ -11,6 +15,28 @@ const Main = () => {
   const [loading, setLoading]   = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const productsPerPage = 10;
+
+  const [favIds, setFavIds] = useState(new Set());
+
+  useEffect(() => {
+    const stored = JSON.parse(localStorage.getItem(FAVORITES_KEY) || "[]");
+    setFavIds(new Set(stored));
+  }, []);
+
+  const saveFavs = (setLike) => {
+    const arr = Array.from(setLike);
+    localStorage.setItem(FAVORITES_KEY, JSON.stringify(arr));
+  };
+
+  const toggleFav = (id) => {
+    setFavIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      saveFavs(next);
+      return next;
+    });
+  };
 
   const fetchProducts = async () => {
     setLoading(true);
@@ -27,7 +53,6 @@ const Main = () => {
   useEffect(() => { fetchProducts(); }, []);
 
   const query = (new URLSearchParams(location.search).get("q") || "").trim().toLowerCase();
-
   useEffect(() => { setCurrentPage(1); }, [query]);
 
   const filtered = query
@@ -55,20 +80,54 @@ const Main = () => {
         {!loading && (
           <>
             <ul className="product-list">
-              {currentProducts.map(product => (
-                <li key={product.id} className="product-item">
-                  <Link to={`/products/${product.id}`} className="product-link-wrapper">
-                    <div className="product-img-container">
-                      <img src={product.imageUrl} alt={product.name} />
+              {currentProducts.map(product => {
+                const isFav = favIds.has(product.id);
+                return (
+                  <li key={product.id} className="product-item">
+                    <button
+                      className={`fav-toggle ${isFav ? "active" : ""}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        toggleFav(product.id);
+                      }}
+                      aria-label={isFav ? "Quitar de favoritos" : "Agregar a favoritos"}
+                      title={isFav ? "Quitar de favoritos" : "Agregar a favoritos"}
+                    >
+                      <img src={isFav ? esferaOn : esferaOff} alt="" />
+                    </button>
+
+                    <Link to={`/products/${product.id}`} className="product-link-wrapper">
+                      <div className="product-img-container">
+                        <img src={product.imageUrl} alt={product.name} />
+                      </div>
+                      <h2 className="product-name">{product.name}</h2>
+                      <p className="product-price">Precio: ${product.price}</p>
+                    </Link>
+
+                    <div className="card-actions">
+                      <button
+                        className="btn-buy-now"
+                        onClick={() => {
+                          // TODO: lógica de compra inmediata
+                          console.log("Comprar ahora:", product.id);
+                        }}
+                      >
+                        Comprar ahora
+                      </button>
+                      <button
+                        className="btn-add-cart"
+                        onClick={() => {
+                          // TODO: lógica de añadir al carrito
+                          console.log("Añadir al carrito:", product.id);
+                        }}
+                      >
+                        Añadir al carrito
+                      </button>
                     </div>
-                    <h2 className="product-name">{product.name}</h2>
-                    <p className="product-price">Precio: ${product.price}</p>
-                  </Link>
-                  <button className="add-to-cart" onClick={() => {}}>
-                    Añadir al carrito
-                  </button>
-                </li>
-              ))}
+                  </li>
+                );
+              })}
               {fillerCount > 0 && Array.from({ length: fillerCount }).map((_, i) => (
                 <li key={`filler-${i}`} className="product-item placeholder"></li>
               ))}

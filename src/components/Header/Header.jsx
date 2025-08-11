@@ -1,4 +1,3 @@
-// src/components/Header.jsx
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useContext, useEffect, useState } from "react";
 import "./Header.css";
@@ -74,7 +73,7 @@ const Header = () => {
               </>
             ) : (
               <>
-                <li className="header-menu-item"><Link to="/perfil">Perfil</Link></li>
+                <li className="header-menu-item"><Link to="/profile">Perfil</Link></li>
                 <li className="header-menu-item"><Link to="/carrito">Carrito</Link></li>
                 <li className="header-menu-item" onClick={handleLogout}>Cerrar Sesión</li>
               </>

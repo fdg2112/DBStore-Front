@@ -99,3 +99,26 @@
   color:#155b15; border-radius:4px; text-align:center; font-size:2em;
   font-family:'Bangers', cursive, sans-serif;
 }
+
+.fav-toggle-detail {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 42px;
+  height: 42px;
+  border: none;
+  background: transparent;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  z-index: 6;
+  transition: transform .15s ease, filter .2s ease;
+}
+.fav-toggle-detail img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
+}
+.fav-toggle-detail:hover { transform: scale(1.07); filter: drop-shadow(0 2px 4px rgba(0,0,0,.25)); }

@@ -1,0 +1,129 @@
+.profile {
+  flex: 1;
+  background-image: url('../assets/shenglong.png');
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
+  padding: 24px;
+}
+
+.profile-wrap {
+  max-width: 980px;
+  margin: 0 auto 40px;
+}
+
+.profile-title {
+  margin: 0 0 12px;
+  font-family: 'Bangers', cursive;
+  font-size: 2.2rem;
+  color: #3c78d8;
+  text-align: center;
+  text-shadow: 0 0 2px #fff;
+}
+
+.profile-subtitle {
+  margin: 24px 0 8px;
+  font-family: 'Bangers', cursive;
+  font-size: 1.6rem;
+  color: #3c78d8;
+  text-shadow: 0 0 2px #fff;
+  text-align: left;
+}
+
+.profile-loading {
+  text-align: center;
+  font-family: 'Bangers', cursive, sans-serif;
+  font-size: 1.5rem;
+  color: #155b15;
+  margin: 60px 0;
+}
+
+.profile-alert {
+  margin: 8px 0 12px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+.profile-alert.error {
+  background: #fdecea;
+  color: #a94442;
+  border: 1px solid #f5c6cb;
+}
+
+.profile-alert.success {
+  background: #e6ffed;
+  color: #0b6d2b;
+  border: 1px solid #b7f0c2;
+}
+
+.profile-card {
+  background: #fff;
+  border: 2px solid #f28c28;
+  border-radius: 12px;
+  box-shadow: 0 0 8px rgba(242, 140, 40, 0.5);
+  padding: 18px;
+}
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px 18px;
+}
+
+.profile-grid.pwd {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.field label {
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-size: 0.95rem;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.field input {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-size: 1rem;
+  outline: none;
+}
+
+.span2 {
+  grid-column: span 2;
+}
+
+.profile-actions {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 12px;
+}
+
+.btn-save {
+  background: linear-gradient(45deg, #f28c28, #f97316);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-family: 'Bangers', cursive;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform .15s, filter .2s;
+}
+
+.btn-save:hover {
+  transform: scale(1.03);
+}
+
+@media (max-width: 900px) {
+  .profile-grid { grid-template-columns: 1fr; }
+  .profile-grid.pwd { grid-template-columns: 1fr; }
+  .span2 { grid-column: span 1; }
+}
